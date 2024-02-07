@@ -449,13 +449,10 @@ fn run() -> anyhow::Result<i32> {
                     // use canonical name
                     let callee = if let Some(canon) = aliases.get(func) {
                         indices[*canon]
+                    } else if symbols.undefined.contains(func) {
+                        warn!("callee `{}` is unknown", func);
+                        continue;
                     } else {
-                        assert!(
-                            symbols.undefined.contains(func),
-                            "BUG: callee `{}` is unknown",
-                            func
-                        );
-
                         if let Some(idx) = indices.get(func) {
                             *idx
                         } else {
